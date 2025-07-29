@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Growth Profit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ffffff;
+            --dark-color: #2c3e50;
+            --body-bg: #f4f7fa;
+            --text-color: #555;
+            --border-color: #e8eef3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- Login Section --- */
+        #login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background: var(--light-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        .login-box h1 {
+            color: var(--dark-color);
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .login-box button:hover {
+            background-color: #2980b9;
+        }
+
+        /* --- Admin Dashboard --- */
+        .admin-header {
+            background: var(--dark-color);
+            color: var(--light-color);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .admin-nav {
+            background: var(--light-color);
+            padding: 10px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap; /* Mobile friendly */
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: #ecf0f1;
+        }
+
+        .nav-btn.active {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .content-card {
+            background: var(--light-color);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        
+        .content-card h2 {
+            margin-top: 0;
+            color: var(--dark-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto; /* Tables ko mobile par scrollable banata hai */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap; /* Text ko wrap hone se rokta hai */
+        }
+
+        thead th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        tbody tr:hover {
+            background-color: #f7f9fc;
+        }
+
+        .status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+            color: var(--light-color);
+        }
+        .status-processing { background-color: var(--warning-color); }
+        .status-approved { background-color: var(--success-color); }
+        .status-rejected { background-color: var(--danger-color); }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            font-size: 12px;
+            transition: opacity 0.3s;
+        }
+        .action-btn:hover { opacity: 0.85; }
+        .approve-btn { background-color: var(--success-color); }
+        .reject-btn { background-color: var(--danger-color); }
+
+        /* Responsive Design for Mobile */
+        @media (max-width: 768px) {
+            .login-box { padding: 30px; }
+            .admin-nav { padding: 10px; gap: 5px; }
+            .nav-btn { padding: 8px 12px; font-size: 14px; }
+            .main-content { padding: 15px; }
+            .content-card { padding: 15px; }
+            .content-card h2 { font-size: 18px; }
+            th, td { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-container">
+        <div class="login-box">
+            <h1>Admin Panel Login</h1>
+            <input type="email" id="admin-email" placeholder="Admin Email" value="admin@gmail.com">
+            <input type="password" id="admin-password" placeholder="Admin Password">
+            <button onclick="adminLogin()">Login</button>
+        </div>
+    </div>
+
+    <div id="admin-dashboard" class="hidden">
+        <header class="admin-header">
+            <h1>Admin Dashboard</h1>
+        </header>
+
+        <nav class="admin-nav">
+            <button class="nav-btn active" onclick="showAdminSection('users', this)">Users</button>
+            <button class="nav-btn" onclick="showAdminSection('deposits', this)">Deposit Requests</button>
+            <button class="nav-btn" onclick="showAdminSection('withdrawals', this)">Withdrawal Requests</button>
+        </nav>
+
+        <main class="main-content">
+            <!-- Users Section -->
+            <div id="users-section" class="content-card">
+                <h2>Registered Users</h2>
+                <div class="table-wrapper">
+                    <table id="users-table">
+                        <thead><tr><th>Sign Up Date</th><th>Email</th><th>Phone Number</th><th>Balance (Rs.)</th></tr></thead>
+                        <tbody><!-- Data yahan aayega --></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Deposit Requests Section -->
+            <div id="deposits-section" class="content-card hidden">
+                <h2>Pending Deposit Requests</h2>
+                <div class="table-wrapper">
+                    <table id="deposits-table">
+                        <thead><tr><th>Date</th><th>Amount</th><th>Method</th><th>TID</th><th>Sender No.</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody><!-- Data yahan aayega --></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Withdrawal Requests Section -->
+            <div id="withdrawals-section" class="content-card hidden">
+                <h2>Pending Withdrawal Requests</h2>
+                 <div class="table-wrapper">
+                    <table id="withdrawals-table">
+                        <thead><tr><th>Date</th><th>Amount</th><th>Method</th><th>Account No.</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody><!-- Data yahan aayega --></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+    <script>
+        // --- Aapka Firebase Config Object ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCbxBpV2-UN0xyo26mgF2K6HQ_qOJLCHf4",
+            authDomain: "fastshare-90e03.firebaseapp.com",
+            projectId: "fastshare-90e03",
+            storageBucket: "fastshare-90e03.firebasestorage.app",
+            messagingSenderId: "641122672614",
+            appId: "1:641122672614:web:1adf3edffd4b5c9c1c4027"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function adminLogin() {
+            const ADMIN_EMAIL = "admin@gmail.com";
+            const ADMIN_PASSWORD = "admin123";
+            const inputEmail = document.getElementById('admin-email').value;
+            const inputPassword = document.getElementById('admin-password').value;
+
+            if (inputEmail === ADMIN_EMAIL && inputPassword === ADMIN_PASSWORD) {
+                document.getElementById('login-container').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                loadAllData();
+            } else {
+                alert("Ghalat Email ya Password!");
+            }
+        }
+        
+        function showAdminSection(sectionName, navElement) {
+            document.querySelectorAll('.content-card').forEach(s => s.classList.add('hidden'));
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            navElement.classList.add('active');
+        }
+
+        function loadAllData() {
+            loadUsers();
+            loadDeposits();
+            loadWithdrawals();
+        }
+
+        function loadUsers() {
+            const tableBody = document.querySelector("#users-table tbody");
+            db.ref('users').on('value', snapshot => {
+                tableBody.innerHTML = '';
+                snapshot.forEach(child => {
+                    const user = child.val();
+                    const signupDate = user.signupDate ? new Date(user.signupDate).toLocaleDateString('en-GB') : 'N/A';
+                    tableBody.innerHTML += `<tr>
+                        <td>${signupDate}</td>
+                        <td>${user.email}</td>
+                        <td>${user.number}</td>
+                        <td>${parseFloat(user.balance || 0).toFixed(2)}</td>
+                    </tr>`;
+                });
+            });
+        }
+        
+        function loadDeposits() {
+            const tableBody = document.querySelector("#deposits-table tbody");
+            db.ref('deposits').orderByChild('status').equalTo('processing').on('value', snapshot => {
+                tableBody.innerHTML = '';
+                snapshot.forEach(child => {
+                    const key = child.key;
+                    const req = child.val();
+                    const date = new Date(req.date).toLocaleString('en-GB');
+                    tableBody.innerHTML += `<tr>
+                        <td>${date}</td>
+                        <td>Rs. ${req.amount}</td>
+                        <td>${req.method}</td>
+                        <td>${req.tid}</td>
+                        <td>${req.sendingNumber}</td>
+                        <td><span class="status status-${req.status}">${req.status}</span></td>
+                        <td>
+                            <button class="action-btn approve-btn" onclick="approveDeposit('${key}', '${req.userId}', ${req.amount})">Approve</button>
+                            <button class="action-btn reject-btn" onclick="updateStatus('deposits', '${key}', 'rejected')">Reject</button>
+                        </td>
+                    </tr>`;
+                });
+            });
+        }
+
+        function loadWithdrawals() {
+            const tableBody = document.querySelector("#withdrawals-table tbody");
+            db.ref('withdrawals').orderByChild('status').equalTo('processing').on('value', snapshot => {
+                tableBody.innerHTML = '';
+                snapshot.forEach(child => {
+                    const key = child.key;
+                    const req = child.val();
+                    const date = new Date(req.date).toLocaleString('en-GB');
+                    tableBody.innerHTML += `<tr>
+                        <td>${date}</td>
+                        <td>Rs. ${req.amount}</td>
+                        <td>${req.method}</td>
+                        <td>${req.account}</td>
+                        <td><span class="status status-${req.status}">${req.status}</span></td>
+                        <td>
+                            <button class="action-btn approve-btn" onclick="updateStatus('withdrawals', '${key}', 'approved')">Approve</button>
+                            <button class="action-btn reject-btn" onclick="rejectWithdrawal('${key}', '${req.userId}', ${req.amount})">Reject</button>
+                        </td>
+                    </tr>`;
+                });
+            });
+        }
+
+        function updateStatus(type, key, newStatus) {
+            db.ref(`${type}/${key}`).update({ status: newStatus })
+              .then(() => alert(`${type.slice(0, -1)} request has been ${newStatus}.`))
+              .catch(err => alert("Error: " + err.message));
+        }
+
+        function approveDeposit(depositKey, userId, amount) {
+            const userBalanceRef = db.ref(`users/${userId}/balance`);
+            userBalanceRef.once('value').then(snap => {
+                const currentBalance = snap.val() || 0;
+                const newBalance = currentBalance + amount;
+                let updates = {};
+                updates[`/users/${userId}/balance`] = newBalance;
+                updates[`/deposits/${depositKey}/status`] = 'approved';
+                return db.ref().update(updates);
+            })
+            .then(() => alert("Deposit approved and balance updated successfully."))
+            .catch(err => alert("Error approving deposit: " + err.message));
+        }
+        
+        function rejectWithdrawal(withdrawalKey, userId, amount) {
+            const userBalanceRef = db.ref(`users/${userId}/balance`);
+            userBalanceRef.once('value').then(snap => {
+                const currentBalance = snap.val() || 0;
+                const newBalance = currentBalance + amount;
+                let updates = {};
+                updates[`/users/${userId}/balance`] = newBalance;
+                updates[`/withdrawals/${withdrawalKey}/status`] = 'rejected';
+                return db.ref().update(updates);
+            })
+            .then(() => alert("Withdrawal rejected and balance returned to the user."))
+            .catch(err => alert("Error rejecting withdrawal: " + err.message));
+        }
+    </script>
+</body>
+</html>
